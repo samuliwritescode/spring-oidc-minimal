@@ -2,13 +2,13 @@
 
 Project layout contains 3 necessary files:
 - pom.xml (with minimal deps)
-- src/main/java/org/samuliwritescode/minimal/oidc/MainRoute.java (Application entry point)
+- src/main/java/org/samuliwritescode/minimal/oidc/Application.java (Application entry point)
 - src/main/resources/application.properties (Properties for Keycloak server)
 
 Everything else will be either generated or are not strictly required. 
 Dockerfile is provided for convenience.
 
-What application does, it prints info about the logged-in user at the root path.
+What application does, it has 2 routes. First is unsecured main page and second secured page that displays username of the logged-in user.
 
 ## Prerequisites: OpenID Connect server
 You will have to have some instance of OpenID connect server running. 

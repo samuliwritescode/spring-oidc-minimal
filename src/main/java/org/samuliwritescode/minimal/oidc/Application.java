@@ -33,7 +33,7 @@ public class Application {
             OidcUser user = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             add(new Paragraph("This is a secured route and you are the user '%s'".formatted(user.getName())));
             Anchor logoutLink = new Anchor("/logout", "logout");
-            logoutLink.setRouterIgnore(true);
+            logoutLink.setRouterIgnore(true); // <-- /logout is handled by spring and not Vaadin
             add(logoutLink);
         }
     }
@@ -43,9 +43,9 @@ public class Application {
     @AnonymousAllowed
     public static class UnsecuredRoute extends Div {
         public UnsecuredRoute() {
-            add(new Paragraph("Welcome to unsecured address. This you may access without logging in."));
-            Anchor linkToSecuredPage = new Anchor("/secured", "This page will require you to login");
-            linkToSecuredPage.setRouterIgnore(true); // <- So that spring security web filter will catch it
+            add(new Paragraph("Welcome to unsecured route. This you may access without logging in."));
+            Anchor linkToSecuredPage = new Anchor("/secured", "This route will require you to login");
+            linkToSecuredPage.setRouterIgnore(true); // <-- So that spring security web filter will catch it
             add(linkToSecuredPage);
         }
     }
@@ -53,19 +53,17 @@ public class Application {
     @EnableWebSecurity
     @Configuration
     public static class SecurityConfiguration extends VaadinWebSecurity {
-
         private final OidcClientInitiatedLogoutSuccessHandler logoutSuccessHandler;
 
         public SecurityConfiguration(@Autowired ClientRegistrationRepository clientRegistrationRepository) {
             logoutSuccessHandler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
-            logoutSuccessHandler.setPostLogoutRedirectUri("http://localhost:8080/unsecured");
+            logoutSuccessHandler.setPostLogoutRedirectUri("http://localhost:8080/unsecured"); // <-- Where Keycloak will redirect after logging out
         }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.oauth2Login(Customizer.withDefaults()); // <-- This is important to let Spring Security to know to redirect to external login page.
             http.logout(c -> c.logoutSuccessHandler(logoutSuccessHandler)); // <-- Logout with oauth2 must be handled with Keycloak
-
             super.configure(http);
         }
     }
