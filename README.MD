@@ -6,7 +6,6 @@ Project layout contains 3 necessary files:
 - src/main/resources/application.properties (Properties for Keycloak server)
 
 Everything else will be either generated or are not strictly required. 
-Dockerfile is provided for convenience.
 
 What application does, it has 2 routes. First is unsecured main page and second secured page that displays username of the logged-in user.
 
@@ -25,9 +24,5 @@ at URL http://localhost:8081/realms/minimal-spring-oidc
 Run the application by
 
 `mvn spring-boot:run`
-
-or
-
-`docker build -t spring-oidc-minimal .` and then `docker run -p 8080:8080 spring-oidc-minimal:latest`
 
 then open your browser at http://localhost:8080/
