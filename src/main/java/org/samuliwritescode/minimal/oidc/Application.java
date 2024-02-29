@@ -28,8 +28,8 @@ public class Application {
 
     @Route("secured")
     @PermitAll
-    public static class MainRoute extends Div {
-        public MainRoute() {
+    public static class SecuredRoute extends Div {
+        public SecuredRoute() {
             OidcUser user = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             add(new Paragraph("This is a secured route and you are the user '%s'".formatted(user.getName())));
             Anchor logoutLink = new Anchor("/logout", "logout");
