@@ -1,4 +1,4 @@
-# A minimal OpenID Connect enforced Vaadin Flow application with Spring Boot
+# A minimal OpenID Connect (OIDC) enforced Vaadin Flow application with Spring Boot
 
 Project layout contains 3 necessary files:
 - pom.xml (with minimal deps)
