@@ -20,7 +20,7 @@ The tech stack might look like this:
 ## But you don’t know where to start from
 
 Examples that you will find online are either incomplete or overwhelming. If they are incomplete, then they are not
-fully working apps that you can play around. If they are overwhelming, then you can play around. but you easily get lost
+fully working apps that you can play around. If they are overwhelming, you can play around, but you easily get lost
 what does exactly what.
 
 ## Start simple
