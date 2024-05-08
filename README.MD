@@ -52,7 +52,7 @@ The first route is for secured part that should be login enforced. Annotation @P
 Second route for unsecured part that is public and accessing it does not require user to login. Annotation
 @AnonymousAllowed = not necessary to be logged in.
 
-```
+```java
 @Route("secured")
 @PermitAll
 public class SecuredRoute extends Div {
@@ -93,7 +93,7 @@ and logout success handler here does exactly that.
 Spring security will add filters that will catch unauthorised access and redirect to Keycloak endpoints. Finally, the
 Oauth2 login is with default configuration by convention values.
 
-```
+```java
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends VaadinWebSecurity {
@@ -122,7 +122,7 @@ Most interesting properties are client_id and issuer-uri which will be pointing 
 done on the next chapter. Issuer-uri contains both the address of the Keycloak server and the realm as a part in the
 uri.
 
-```
+```properties
 spring.security.oauth2.client.registration.keycloak.client-id=minimal-spring-oidc-client
 spring.security.oauth2.client.registration.keycloak.authorization-grant-type=authorization_code
 spring.security.oauth2.client.registration.keycloak.scope=openid
