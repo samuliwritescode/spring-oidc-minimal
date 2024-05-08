@@ -44,10 +44,91 @@ Everything else will be either generated or are not strictly required.
 What application does, it has 2 routes. First is unsecured main page and second secured page that displays username of
 the logged-in user.
 
+### Routes
+
+The first route is for secured part that should be login enforced. Annotation @PermitAll = any logged in user. Route
+/logout is configured by Spring behind the scenes and is by convention.
+
+Second route for unsecured part that is public and accessing it does not require user to login. Annotation
+@AnonymousAllowed = not necessary to be logged in.
+
+```
+@Route("secured")
+@PermitAll
+public class SecuredRoute extends Div {
+    public SecuredRoute() {
+        OidcUser user = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        add(new Paragraph("This is a secured route and you are the user '%s'".formatted(user.getName())));
+        Anchor logoutLink = new Anchor("/logout", "logout");
+        logoutLink.setRouterIgnore(true); // <-- /logout is handled by spring and not Vaadin
+        add(logoutLink);
+    }
+}
+
+@Route("unsecured")
+@RouteAlias("")
+@AnonymousAllowed
+public class UnsecuredRoute extends Div {
+    public UnsecuredRoute() {
+        add(new Paragraph("Welcome to unsecured route. This you may access without logging in."));
+        Anchor linkToSecuredPage = new Anchor("/secured", "This route will require you to login");
+        linkToSecuredPage.setRouterIgnore(true); // <-- So that spring security web filter will catch it
+        add(linkToSecuredPage);
+    }
+}
+```
+
+### Security configuration
+
+Spring configuration is required to configure OIDC and VaadinWebSecurity base class is inherited here because it
+configures Vaadin to play along with Spring
+Security. [Vaadin.com documentation page](https://vaadin.com/docs/latest/security/enabling-security) describes the usage
+and details of this base class.
+
+If logout route is navigated, then user would stay on the final page, but we want to redirect back to /unsecured route
+and logout success handler here does exactly that.
+
+Spring security will add filters that will catch unauthorised access and redirect to Keycloak endpoints. Finally, the
+Oauth2 login is with default configuration by convention values.
+
+```
+@EnableWebSecurity
+@Configuration
+public class SecurityConfiguration extends VaadinWebSecurity {
+    private final OidcClientInitiatedLogoutSuccessHandler logoutSuccessHandler;
+
+    public SecurityConfiguration(@Autowired ClientRegistrationRepository clientRegistrationRepository) {
+        logoutSuccessHandler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+        logoutSuccessHandler.setPostLogoutRedirectUri("http://localhost:8080/unsecured"); // <-- Where Keycloak will redirect after logging out
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.oauth2Login(Customizer.withDefaults()); // <-- This is important to let Spring Security to know to redirect to external login page.
+        http.logout(c -> c.logoutSuccessHandler(logoutSuccessHandler)); // <-- Logout with oauth2 must be handled with Keycloak
+        super.configure(http);
+    }
+}
+```
+
+### Keycloak properties
+
+Most interesting properties are client_id and issuer-uri which will be pointing to Keycloak configuration that is to be
+done on the next chapter. Issuer-uri contains both the address of the Keycloak server and the realm as a part in the
+uri.
+
+```
+spring.security.oauth2.client.registration.keycloak.client-id=minimal-spring-oidc-client
+spring.security.oauth2.client.registration.keycloak.authorization-grant-type=authorization_code
+spring.security.oauth2.client.registration.keycloak.scope=openid
+spring.security.oauth2.client.provider.keycloak.issuer-uri=http://localhost:8081/realms/minimal-spring-oidc
+spring.security.oauth2.client.provider.keycloak.user-name-attribute=preferred_username
+```
+
 ## Prerequisites: OpenID Connect server
 
-You will have to have some instance of OpenID connect server running.
-If you don't, then just use Keycloak development Docker image like:
+You will need to have some instance of Keycloak server running. If you don't, then just use Keycloak development
+Docker image like:
 
 `docker run -p 8081:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:23.0.7 start-dev`
 
@@ -56,8 +137,8 @@ so https://www.keycloak.org/getting-started/getting-started-docker
 
 ## To run it
 
-application.properties expects Keycloak server running with client ID "minimal-spring-oidc-client"
-at URL http://localhost:8081/realms/minimal-spring-oidc
+application.properties that was defined in previous chapter expects Keycloak server running with client ID "
+minimal-spring-oidc-client" at URL http://localhost:8081/realms/minimal-spring-oidc
 
 Run the application by
 
