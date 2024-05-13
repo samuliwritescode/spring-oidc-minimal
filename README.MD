@@ -27,7 +27,7 @@ what does exactly what.
 
 Ideally it would be really nice if you have a starting point that gives you minimal but working application. Then you
 are much closer to the point of starting from scratch, where you understand every line that goes into your application.
-This minimal themed tutorial is all about taking something complex and making it simple and understandable.
+This minimalism themed tutorial is all about taking something complex and making it simple and understandable.
 
 So let’s try to make it simple.
 
