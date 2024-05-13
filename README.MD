@@ -27,7 +27,7 @@ what does exactly what.
 
 Ideally it would be really nice if you have a starting point that gives you minimal but working application. Then you
 are much closer to the point of starting from scratch, where you understand every line that goes into your application.
-This minimal code projects series is all about taking something complex and making it simple and understandable.
+This minimal themed tutorial is all about taking something complex and making it simple and understandable.
 
 So let’s try to make it simple.
 
@@ -46,7 +46,7 @@ the logged-in user.
 
 ### Routes
 
-The first route is for secured part that should be login enforced. Annotation @PermitAll = any logged in user. Route
+The first route is for secured part that should be login enforced. Annotation @PermitAll = any logged-in user. Route
 /logout is configured by Spring behind the scenes and is by convention.
 
 Second route for unsecured part that is public and accessing it does not require user to login. Annotation
