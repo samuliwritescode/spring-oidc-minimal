@@ -1,5 +1,7 @@
 # A minimal OpenID Connect (OIDC) enforced Vaadin Flow application with Spring Boot
 
+[![Watch in Youtube](http://img.youtube.com/vi/kzQ0CR4dVrs/0.jpg)](https://youtu.be/kzQ0CR4dVrs)
+
 So you want or need to build a Java based web application that is secured by Single Sign-On (SSO) login. This is very
 typical use case that you have part of application that is not public, but requires authenticated user to access it. You
 could build login mechanism by yourself, but implementing security by yourself would be handling all security issues,
